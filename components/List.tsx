@@ -9,8 +9,8 @@ const List: React.FC = () => {
   const isSelected = (invoice: InvoiceData) => selectedInvoice?.invoiceNumber === invoice.invoiceNumber;
 
   return (
-    <div className="p-4 grid grid-cols-5 gap-6">
-      <div className="bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden col-span-3">
+    <div className="p-4 md:grid md:grid-cols-5 md:gap-6">
+      <div className="bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden md:col-span-3">
         <table className="w-full">
           <thead className="bg-gray-700 text-white">
             <tr>
@@ -24,7 +24,7 @@ const List: React.FC = () => {
           <tbody>
             {invoiceList.map((invoice, index) => (
               <tr
-                key={invoice.invoiceNumber} // It's better to use invoiceNumber if it's unique
+                key={invoice.invoiceNumber}
                 className={`cursor-pointer ${isSelected(invoice) ? 'bg-gray-300' : index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}`}
                 onClick={() => setSelectedInvoice(isSelected(invoice) ? null : invoice)}
               >
@@ -38,16 +38,12 @@ const List: React.FC = () => {
           </tbody>
         </table>
       </div>
- <div className='col-span-2'>
- <InvoiceDetails
-invoice={selectedInvoice}
-    clearSelection={() => setSelectedInvoice(null)}
-  />
- </div>
- 
-
-
-     
+      <div className='md:col-span-2'>
+        <InvoiceDetails
+          invoice={selectedInvoice}
+          clearSelection={() => setSelectedInvoice(null)}
+        />
+      </div>
     </div>
   );
 };
