@@ -11,7 +11,8 @@ export type InvoiceData = {
 
 export const credentials = {
     employmentID: "LARJES",
-    pincode: "12345"
+    pincode: "12345",
+    level: 0,
 }
 
 export const invoiceList: InvoiceData[] = [
@@ -71,4 +72,35 @@ export const invoiceList: InvoiceData[] = [
       amount: 8500,
       authorizer: 'Chandler Bing'
     }
+  ];
+
+ export  const exampleDataArray = [
+    {
+      id: 1,
+      date: '2021-07-01',
+      supplier: 'Supplier A',
+      invno: 'INV001',
+      amount: 5500,
+      authorizer: 'LARJES'
+      // ...additional fields corresponding to other columns
+    },
+    {
+      id: 2,
+      date: '2021-07-02',
+      supplier: 'Supplier B',
+      invno: 'INV002',
+      amount: 5500,
+      authorizer: 'LARJES'
+      // ...additional fields corresponding to other columns
+    },
+    {
+      id: 3,
+      date: '2021-07-03',
+      supplier: 'Supplier C',
+      invno: 'INV003',
+      amount: 5500,
+      authorizer: 'LARJES'
+      // ...additional fields corresponding to other columns
+    },
+    // ...additional data objects
   ];

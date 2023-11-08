@@ -1,18 +1,8 @@
-"use client";
-import { useState, FormEvent } from 'react';
+
 import  Image  from 'next/image'
-import { useAuth } from '@/contexts/AuthContext';
 import LoginForm from '@/components/LoginForm';
 
 const Login: React.FC = () => {
-  const [employmentId, setEmploymentId] = useState<string>('');
-  const [pincode, setPincode] = useState<string>('');
-  const { login } = useAuth();
-
-  const handleLogin = async (event: FormEvent) => {
-    event.preventDefault();
-    await login(employmentId, pincode);
-  };
 
   return <div>
     <LoginForm />

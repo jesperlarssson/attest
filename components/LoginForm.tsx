@@ -1,24 +1,33 @@
 "use client";
 
 import { useState, FormEvent } from 'react';
+import toast from 'react-hot-toast';
+
 import { useAuth } from '../contexts/AuthContext';
-import Image from 'next/image';
+
 
 const LoginForm: React.FC = () => {
   const [employmentId, setEmploymentId] = useState<string>('');
   const [pincode, setPincode] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null); 
+
   const { login } = useAuth();
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
     setLoading(true);
+    setError(null);
 
     try {
-      await login(employmentId, pincode);
+      const res = login(employmentId, pincode);
+      toast.promise(res, {
+        loading: 'Loading',
+        success: 'Successful login',
+        error: 'Login failed',
+      });
       // Add any additional logic post login
     } catch (error) {
-      // Handle error scenario (e.g., show error message)
       console.error(error);
     } finally {
       setLoading(false);
@@ -28,8 +37,8 @@ const LoginForm: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
       <div className="max-w-md w-full mx-auto">
-        <div className="text-3xl font-bold text-gray-900 mt-2 text-center">Attestverktyg</div>
-        <div className="bg-white p-8 border border-gray-300 mt-6 rounded-lg shadow-lg">
+        <div className="text-3xl font-bold text-gray-700 mt-2 text-center">Attestverktyg</div>
+        <div className="bg-white p-8 border border-gray-300 mt-6 rounded-lg shadow-lg m-6">
           <form className="space-y-6" onSubmit={handleLogin}>
             <div>
               <label htmlFor="employmentId" className="text-sm font-bold text-gray-600 block">

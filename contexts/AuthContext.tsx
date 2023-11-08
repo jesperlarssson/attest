@@ -7,7 +7,7 @@ import { credentials } from '@/lib/dummy-backend';
 
 interface AuthContextType {
   user: UserType | null;
-  login: (employmentId: string, pincode: string) => Promise<void>;
+  login: (employmentId: string, pincode: string) => Promise<UserType>;
   logout: () => void;
 }
 
@@ -51,10 +51,9 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
 
       // Redirect to the home page
       router.push('/');
+      return userData;
     } else {
-      // Handle login failure
-      console.error('Invalid login credentials');
-      // Possible user feedback: "Invalid employment ID or PIN code."
+      throw new Error("User is missing")
     }
   };
 
