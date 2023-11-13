@@ -16,6 +16,31 @@ const config: Config = {
       transitionProperty: {
         'height': 'height',
         'spacing': 'margin, padding',
+      },
+      height: {
+        '164': '38rem',
+      },
+      rotate: {
+        '36': '36deg',
+      },
+
+      colors: {
+        blue: {
+          light: '#007bff', // Light mode accent color
+          dark: '#0d6efd', // Dark mode accent color
+        },
+        card: {
+          light: "#FFFFFF",
+          dark: "#242424",
+        },
+        edge: {
+          light: "#F3F3F3",
+          dark: "#323232"
+        },
+        accent: {
+          light: '#007bff', 
+          dark: '#829ab1', 
+        }
       }
     },
   },

@@ -1,16 +1,13 @@
 import React from "react";
 import SettingsContent from "./components/SettingsContent";
-import Navbar from "@/components/Navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 const Settings = () => {
   return (
-    <>
-      <ProtectedRoute>
-        <Navbar />
-        <SettingsContent />
-      </ProtectedRoute>
-    </>
+    <ProtectedRoute>
+      <h1 className="font-bold tracking-wider text-2xl mb-4">Settings</h1>
+      <SettingsContent />
+    </ProtectedRoute>
   );
 };
 

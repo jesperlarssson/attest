@@ -5,6 +5,7 @@ export type InvoiceData = {
     invoiceNumber: string;
     amount: number;
     authorizer: string;
+    documentUrl?: string;
   };
 
 
@@ -21,42 +22,48 @@ export const invoiceList: InvoiceData[] = [
       supplier: 'Supplier1',
       invoiceNumber: 'INV001',
       amount: 1500,
-      authorizer: 'John Doe'
+      authorizer: 'John Doe',
+      documentUrl: '/docs/invoice.pdf' 
     },
     {
       dateOfArrival: '2023-10-02',
       supplier: 'Supplier2',
       invoiceNumber: 'INV002',
       amount: 2500,
-      authorizer: 'Jane Smith'
+      authorizer: 'Jane Smith',
+      documentUrl: '/docs/invoice.pdf' 
     },
     {
       dateOfArrival: '2023-10-03',
       supplier: 'Supplier3',
       invoiceNumber: 'INV003',
       amount: 3500,
-      authorizer: 'Alice Johnson'
+      authorizer: 'Alice Johnson',
+      documentUrl: '/docs/invoice.pdf' 
     },
     {
       dateOfArrival: '2023-10-04',
       supplier: 'Supplier4',
       invoiceNumber: 'INV004',
       amount: 4500,
-      authorizer: 'Steve Brown'
+      authorizer: 'Steve Brown',
+      documentUrl: '/docs/invoice.pdf' 
     },
     {
       dateOfArrival: '2023-10-05',
       supplier: 'Supplier5',
       invoiceNumber: 'INV005',
       amount: 5500,
-      authorizer: 'Rachel Green'
+      authorizer: 'Rachel Green',
+      documentUrl: '/docs/invoice.pdf' 
     },
     {
       dateOfArrival: '2023-10-06',
       supplier: 'Supplier6',
       invoiceNumber: 'INV006',
       amount: 6500,
-      authorizer: 'Monica Geller'
+      authorizer: 'Monica Geller',
+      documentUrl: '/docs/invoice.pdf' 
     },
     {
       dateOfArrival: '2023-10-07',
@@ -64,6 +71,7 @@ export const invoiceList: InvoiceData[] = [
       invoiceNumber: 'INV007',
       amount: 7500,
       authorizer: 'Ross Geller'
+
     },
     {
       dateOfArrival: '2023-10-08',
@@ -81,7 +89,8 @@ export const invoiceList: InvoiceData[] = [
       supplier: 'Supplier A',
       invno: 'INV001',
       amount: 5500,
-      authorizer: 'LARJES'
+      authorizer: 'LARJES',
+      documentUrl: '/docs/invoice.pdf' 
       // ...additional fields corresponding to other columns
     },
     {
@@ -90,7 +99,8 @@ export const invoiceList: InvoiceData[] = [
       supplier: 'Supplier B',
       invno: 'INV002',
       amount: 5500,
-      authorizer: 'LARJES'
+      authorizer: 'LARJES',
+      documentUrl: '/docs/invoice.pdf' 
       // ...additional fields corresponding to other columns
     },
     {
@@ -99,7 +109,8 @@ export const invoiceList: InvoiceData[] = [
       supplier: 'Supplier C',
       invno: 'INV003',
       amount: 5500,
-      authorizer: 'LARJES'
+      authorizer: 'LARJES',
+      documentUrl: '/docs/invoice.pdf' 
       // ...additional fields corresponding to other columns
     },
     // ...additional data objects

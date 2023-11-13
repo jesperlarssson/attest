@@ -3,21 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --foreground-rgb: 65, 65, 65;
+  --background-start-rgb: 230, 233, 238;
   --background-end-rgb: 255, 255, 255;
+
+  /* Light mode colors */
+  --color-accent-light: #007bff; /* Main accent color for light mode */
+  --color-accent-light-secondary: #0056b3; /* Secondary accent color for light mode */
 }
 
-/* @media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
+    --background-start-rgb: 28, 28, 28;
     --background-end-rgb: 0, 0, 0;
+
+    /* Dark mode colors */
+    --color-accent-dark: #0d6efd; /* Main accent color for dark mode */
+    --color-accent-dark-secondary: #0a58ca; /* Secondary accent color for dark mode */
   }
-} */
+}
 
 body {
   color: rgb(var(--foreground-rgb));
   --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  background-color: rgb(var(--background-start-rgb));
 }

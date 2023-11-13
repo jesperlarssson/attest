@@ -26,7 +26,7 @@ const LoginForm: React.FC = () => {
         success: 'Successful login',
         error: 'Login failed',
       });
-      // Add any additional logic post login
+
     } catch (error) {
       console.error(error);
     } finally {

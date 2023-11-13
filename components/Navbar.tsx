@@ -2,12 +2,19 @@
 import React from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePathname } from 'next/navigation'
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
+  const pathname = usePathname();
+
+   // Check if the current route is /login
+   if (pathname === '/login') {
+    return null; // Don't render the Navbar when on /login route
+  }
 
   return (
-    <nav className="sticky top-0 left-0 w-full bg-white text-gray-800 shadow-md px-8 py-4 ">
+    <nav className="fixed top-0 left-0 w-full bg-white text-gray-800 shadow-md px-8 py-4">
       <div className="container w-full mx-auto flex justify-between items-center">
         <div className="flex items-center">
           {/* Home Link */}

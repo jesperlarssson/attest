@@ -7,17 +7,18 @@ const SettingsContent = () => {
   const { tableSpec, toggleColumnActive } = useTableSettings();
 
   return (
-    <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <div className="container mx-auto w-full">
+
       <div className="mb-10">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">M3 Connection</h3>
+        <h3 className="text-lg leading-6 font-medium  mb-4">M3 Connection</h3>
         <div className="shadow overflow-hidden rounded-md">
-          <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+          <div className="px-4 py-5 bg-card-light dark:bg-card-dark border border-edge-light dark:border-edge-dark space-y-6 sm:p-6">
             <input 
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="appearance-none block w-full px-3 py-2 border border-edge-light dark:border-edge-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="M3 CE URL" 
             />
             <input 
-              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="appearance-none block w-full px-3 py-2 border border-edge-light dark:border-edge-dark rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Token" 
             />
             <button 
@@ -29,9 +30,9 @@ const SettingsContent = () => {
         </div>
       </div>
       <div>
-        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Table Column Editor</h3>
+        <h3 className="text-lg leading-6 font-medium  mb-4">Table Column Editor</h3>
         <div className="shadow overflow-hidden rounded-md">
-          <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+          <div className="px-4 py-5 bg-card-light dark:bg-card-dark border border-edge-light dark:border-edge-dark space-y-6 sm:p-6">
             {tableSpec && tableSpec.map((column) => (
               <div key={column.heading} className="flex items-center">
                 <input
@@ -40,9 +41,9 @@ const SettingsContent = () => {
                   type="checkbox"
                   checked={column.active}
                   onChange={() => toggleColumnActive(column.heading)}
-                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                  className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-edge-light dark:border-edge-dark rounded"
                 />
-                <label htmlFor={`toggle_${column.heading}`} className="ml-3 block text-sm font-medium text-gray-700">
+                <label htmlFor={`toggle_${column.heading}`} className="ml-3 block text-sm font-medium opacity-80">
                   {column.heading}
                 </label>
               </div>
