@@ -87,24 +87,24 @@ const Table: React.FC<TableProps> = ({ data }) => {
                     {expandedRowId === row.id && (
                       <div className="grid sm:grid-cols-2 gap-4">
                         <PDFViewer pdfURL={row.documentUrl} />
-                        <div className="text-sm text-gray-700 px-4 py-2 w-full justify-center grid grid-cols-2 gap-4">
+                        <div className=" text-gray-700 px-4 py-2 w-full justify-center grid grid-cols-2 gap-4">
                           <button
                             onClick={() => toast("Comment added")}
-                            className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
                             Comment
                           </button>
                           <button
                             onClick={() => toast("Forwarded")}
-                            className="bg-yellow-500 text-white active:bg-yellow-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            className="bg-yellow-500 text-white active:bg-yellow-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
                             Forward
                           </button>
                           <button
                             onClick={() => toast.error("Declined")}
-                            className="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            className="bg-red-500 text-white active:bg-red-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
                             Decline
@@ -112,7 +112,7 @@ const Table: React.FC<TableProps> = ({ data }) => {
 
                           <button
                             onClick={() => toast.success("Approved")}
-                            className="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                            className="bg-green-500 text-white active:bg-green-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
                             Approve

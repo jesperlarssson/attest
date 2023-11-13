@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
-import { usePathname } from "next/navigation";
 import SidebarLink from "./SidebarLink";
 import CollapseButton from "./CollapseButton";
 
@@ -16,11 +15,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   onToggleSidebar,
 }) => {
   const { user, logout } = useAuth();
-  const pathname = usePathname();
-
-  if (pathname === "/login") {
-    return null;
-  }
 
   return (
     <aside
@@ -50,15 +44,13 @@ const Sidebar: React.FC<SidebarProps> = ({
             >
               MATE
             </span>
-            {
-                 isSidebarOpen &&  <span
-                 className={`text-xs font-light text-accent-light dark:text-accent-dark`}
-               >
-                 Meridion Attestation Tool Etc
-               </span>
-
-            }
-           
+            {isSidebarOpen && (
+              <span
+                className={`text-xs font-light text-accent-light dark:text-accent-dark`}
+              >
+                Meridion Attestation Tool Etc
+              </span>
+            )}
           </Link>
 
           {/* Navigation Links */}
@@ -96,7 +88,6 @@ const Sidebar: React.FC<SidebarProps> = ({
               href="/settings"
               expanded={isSidebarOpen}
             />
-           
           </nav>
         </div>
         {/* User and Logout */}

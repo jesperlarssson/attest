@@ -35,18 +35,18 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center">
+    <div className="min-h-screen  flex flex-col justify-center">
       <div className="max-w-md w-full mx-auto">
-        <div className="text-3xl font-bold text-gray-700 mt-2 text-center">Attestverktyg</div>
-        <div className="bg-white p-8 border border-gray-300 mt-6 rounded-lg shadow-lg m-6">
+        <div className="text-3xl flex flex-col font-bold  mt-2 text-center"> <span>MATE</span> <span className='text-lg -mt-2 font-light'>Meridion Attestation Tool</span></div>
+        <div className="bg-card-light dark:bg-card-dark p-8 border border-edge-light dark:border-edge-dark mt-6 rounded-lg shadow-lg m-6">
           <form className="space-y-6" onSubmit={handleLogin}>
             <div>
-              <label htmlFor="employmentId" className="text-sm font-bold text-gray-600 block">
+              <label htmlFor="employmentId" className="text-sm font-bold block">
                 Employment ID
               </label>
               <input
                 type="text"
-                className="w-full p-2 border border-gray-300 rounded mt-1"
+                className="w-full p-2 border bg-black bg-opacity-10 rounded mt-1"
                 id="employmentId"
                 placeholder="Enter your Employment ID"
                 value={employmentId}
@@ -55,12 +55,12 @@ const LoginForm: React.FC = () => {
               />
             </div>
             <div>
-              <label htmlFor="pincode" className="text-sm font-bold text-gray-600 block">
+              <label htmlFor="pincode" className="text-sm font-bold block">
                 PIN Code
               </label>
               <input
                 type="password"
-                className="w-full p-2 border border-gray-300 rounded mt-1"
+                className="w-full p-2 border bg-black bg-opacity-10 rounded mt-1"
                 id="pincode"
                 placeholder="Enter your PIN"
                 value={pincode}

@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import Sidebar from "./Sidebar";
 import Image from "next/image";
 import CollapseButton from "./CollapseButton";
+import { usePathname } from "next/navigation";
 
 type LayoutProps = {
   children: ReactNode;
@@ -21,6 +22,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
     setDomLoaded(true);
   }, []);
+
+  const pathname = usePathname();
+
+  if (pathname === "/login") {
+    return <div>
+      {
+        children
+      }
+    </div>;
+  }
 
   return (
     <div className="flex h-screen overflow-hidden">
