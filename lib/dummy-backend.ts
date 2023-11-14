@@ -113,5 +113,25 @@ export const invoiceList: InvoiceData[] = [
       documentUrl: '/docs/invoice.pdf' 
       // ...additional fields corresponding to other columns
     },
+    {
+      id: 4,
+      date: '2021-07-03',
+      supplier: 'Supplier C',
+      invno: 'INV003',
+      amount: 5500,
+      authorizer: 'LARJES',
+      documentUrl: '/docs/invoice.pdf' 
+      // ...additional fields corresponding to other columns
+    },
+    {
+      id: 5,
+      date: '2021-07-03',
+      supplier: 'Supplier C',
+      invno: 'INV003',
+      amount: 5500,
+      authorizer: 'LARJES',
+      documentUrl: '/docs/invoice.pdf' 
+      // ...additional fields corresponding to other columns
+    },
     // ...additional data objects
   ];

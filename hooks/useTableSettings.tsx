@@ -19,12 +19,18 @@ export const useTableSettings = () => {
   // Load settings from localStorage
   useEffect(() => {
     const savedSpec = localStorage.getItem("tableSettings");
+    let specToSet = initialTableDataSpec;
+  
     if (savedSpec) {
-      setTableSpec(JSON.parse(savedSpec));
-    } else {
-      setTableSpec(initialTableDataSpec);
+      const saved = JSON.parse(savedSpec);
+      if (saved.length === initialTableDataSpec.length) {
+        specToSet = saved;
+      }
     }
-  }, []); // Removed defaultSpec from dependencies to avoid unnecessary effect triggers
+  
+    setTableSpec(specToSet);
+  }, []);
+   // Removed defaultSpec from dependencies to avoid unnecessary effect triggers
 
   // Save settings to localStorage when tableSpec changes
   useEffect(() => {

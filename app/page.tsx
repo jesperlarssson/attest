@@ -1,5 +1,6 @@
 "use client";
 
+import PageTitle from "@/components/PageTitle";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Table from "@/components/Table";
 import { exampleDataArray } from "@/lib/dummy-backend";
@@ -10,7 +11,7 @@ const Home = () => {
     <ProtectedRoute>
       <div className="flex w-full flex-col ">
         <div className="w-full flex justify-between items-center mb-4">
-          <h1 className="font-bold tracking-wider text-2xl">Invoices</h1>
+          <PageTitle>Invoices</PageTitle>
           <button
             onClick={() => toast.error("Failed to reload")}
             className="h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer opacity-40 hover:opacity-100 hover:text-gray-800 hover:bg-gray-400  hover:duration-300 hover:ease-linear focus:bg-white"

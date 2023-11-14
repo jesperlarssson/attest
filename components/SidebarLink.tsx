@@ -16,7 +16,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
 }) => {
   return (
     <Link
-      className="hover:bg-black hover:bg-opacity-10 p-2 flex justify-center items-center gap-4 rounded transition duration-150 ease-in-out"
+      className="hover:bg-black hover:bg-opacity-10 p-2 flex justify-center items-center gap-4 rounded transition duration-150 ease-in-out text-sm"
       href={href}
     >
       <span   className={`${

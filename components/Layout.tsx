@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen ">
       <Sidebar isSidebarOpen={isSidebarOpen} onToggleSidebar={toggleSidebar} />
 
       {/* Main content area */}

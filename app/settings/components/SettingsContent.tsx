@@ -7,7 +7,7 @@ const SettingsContent = () => {
   const { tableSpec, toggleColumnActive } = useTableSettings();
 
   return (
-    <div className="container mx-auto w-full">
+    <div className="container mx-auto w-full mt-4">
 
       <div className="mb-10">
         <h3 className="text-lg leading-6 font-medium  mb-4">M3 Connection</h3>
