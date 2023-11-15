@@ -16,7 +16,7 @@ const CollapseButton: React.FC<CollapseButtonProps> = ({
 
   return (
     <button
-      className="group flex flex-col justify-center rounded-md items-center transition ease-in-out w-8 h-8 "
+      className="group flex flex-col justify-center rounded-md items-center transition ease-in-out w-8 h-8 relative z-20 "
       onClick={handleOnCollapse}
     >
       <div

@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Layout from "@/components/Layout";
+import { ModalProvider } from "@/contexts/ModalContext";
 
 const font = Montserrat({ subsets: ["latin"] });
 
@@ -19,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body className={`${font.className}`}>
-          <Layout>
-            <>{children}</>
-          </Layout>
-        </body>
+        <ModalProvider>
+          <body className={`${font.className}`}>
+            <Layout>
+              <>{children}</>
+            </Layout>
+          </body>
+        </ModalProvider>
       </AuthProvider>
     </html>
   );

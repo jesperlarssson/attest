@@ -7,6 +7,8 @@ import Sidebar from "./Sidebar";
 import Image from "next/image";
 import CollapseButton from "./CollapseButton";
 import { usePathname } from "next/navigation";
+import useCommentModal from "@/hooks/useModal";
+import CommentModal from "./CommentModal";
 
 type LayoutProps = {
   children: ReactNode;
@@ -19,6 +21,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const [domLoaded, setDomLoaded] = useState(false);
 
+
+
   useEffect(() => {
     setDomLoaded(true);
   }, []);
@@ -26,11 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const pathname = usePathname();
 
   if (pathname === "/login") {
-    return <div>
-      {
-        children
-      }
-    </div>;
+    return <div>{children}</div>;
   }
 
   return (
@@ -39,15 +39,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Main content area */}
       <main
-        className={`flex-1 transition-all duration-300 ease-in-out p-3 sm:p-8 ${
+        className={`flex-1 transition-all z-10 duration-300 ease-in-out p-3 sm:p-8 ${
           isSidebarOpen ? "sm:ml-64" : "sm:ml-20"
         }`}
       >
-        <>
-         {children}
-        </>
+        <>{children}</>
       </main>
-      <div className="absolute bottom-0 right-0 p-4 opacity-50">
+      <div className="fixed bottom-0 right-0 p-4 z-0 opacity-50">
         <Image
           src={"/images/meridion-white.png"}
           width={200}
@@ -56,6 +54,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         />
       </div>
       {domLoaded && <Toaster position="bottom-right" />}
+      <CommentModal />
     </div>
   );
 };

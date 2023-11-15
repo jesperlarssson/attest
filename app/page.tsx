@@ -3,10 +3,46 @@
 import PageTitle from "@/components/PageTitle";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Table from "@/components/Table";
-import { exampleDataArray } from "@/lib/dummy-backend";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+interface Invoice {
+  id: number;
+  date: string;
+  supplier: string;
+  invno: string;
+  amount: number;
+  authorizer: string;
+  documentUrl: string;
+  // Include additional fields as needed based on your data structure
+}
+
 const Home = () => {
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const checkForInvoices = async () => {
+      try {
+        const res = await fetch(
+          `/api/invoice/get-pending/${user?.employmentId}`
+        );
+        const response = await res.json();
+        setInvoices(response);
+      } catch (error) {}
+    };
+    if (user) {
+      checkForInvoices();
+    }
+  }, [user]);
+
+  const handleInstanceApproved = (id: number) => {
+    setInvoices((currentInvoices) =>
+      currentInvoices.filter((invoice) => invoice.id !== id)
+    );
+  };
+
   return (
     <ProtectedRoute>
       <div className="flex w-full flex-col ">
@@ -31,7 +67,10 @@ const Home = () => {
             </svg>
           </button>
         </div>
-        <Table data={exampleDataArray} />
+        <Table
+          data={invoices}
+          onInstanceApprovedForId={(id) => handleInstanceApproved(id)}
+        />
       </div>
     </ProtectedRoute>
   );

@@ -3,8 +3,9 @@
 import { useTableSettings } from "@/hooks/useTableSettings";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import PdfReader from "./PdfViewer";
 import PDFViewer from "./PdfViewer";
+import { useAuth } from "@/contexts/AuthContext";
+import useCommentModal from "@/hooks/useModal";
 
 export type TableColumnSpec = {
   heading: string;
@@ -14,14 +15,70 @@ export type TableColumnSpec = {
 
 type TableProps = {
   data: any[]; // you would replace any with a more specific type that matches your row data structure
+  onInstanceApprovedForId: (id: number) => void;
 };
 
-const Table: React.FC<TableProps> = ({ data }) => {
+const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
   const [expandedRowId, setExpandedRowId] = useState<number | null>(null);
   const { tableSpec } = useTableSettings();
+  const { user } = useAuth();
+  const { openModal } = useCommentModal();
 
   const handleRowClick = (id: number) => {
     setExpandedRowId(expandedRowId === id ? null : id);
+  };
+
+  const handleOnApprove = async (id: number) => {
+    try {
+      const res = await fetch(`/api/invoice/${id}/approve`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employmentId: user?.employmentId,
+        }),
+      });
+      const response = await res.json();
+      toast.success(response.message);
+      onInstanceApprovedForId(id);
+    } catch (error: any) {
+      //TODO: handle error
+      toast.error(error.message);
+    }
+  };
+
+  const handleOnForward = async (id: number) => {
+    try {
+      const res = await fetch(`/api/invoice/${id}/forward`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employmentId: user?.employmentId,
+        }),
+      });
+      const response = await res.json();
+      toast.success(response.message);
+    } catch (error: any) {
+      //TODO: handle error
+      toast.error(error.message);
+    }
+  };
+
+  const handleOnComment = async (id: number, comment: string) => {
+    openModal();
+  };
+
+  const handleGetInvoice = async (id: number) => {
+    try {
+      const res = await fetch(`/api/invoice/${id}`);
+      const response = await res.json();
+      toast.success(response.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   if (data.length == 0 || !data) {
@@ -55,7 +112,7 @@ const Table: React.FC<TableProps> = ({ data }) => {
             <React.Fragment key={row.id || rowIndex}>
               <tr
                 onClick={() => handleRowClick(row.id)}
-                className={`cursor-pointer  transition-colors hover:bg-black hover:bg-opacity-10 ${
+                className={`cursor-pointer transition-colors hover:bg-black hover:bg-opacity-10 ${
                   expandedRowId === row.id
                     ? "bg-black bg-opacity-20 hover:bg-slate-300"
                     : ""
@@ -70,7 +127,6 @@ const Table: React.FC<TableProps> = ({ data }) => {
                         className="px-6 py-4 whitespace-nowrap text-sm font-medium"
                       >
                         {row[column.heading.toLowerCase().replace(/\s+/g, "")]}{" "}
-                        {/* Assuming row data keys are formatted from column headings */}
                       </td>
                     ))}
               </tr>
@@ -89,14 +145,16 @@ const Table: React.FC<TableProps> = ({ data }) => {
                         <PDFViewer pdfURL={row.documentUrl} />
                         <div className=" text-gray-700 px-4 py-2 w-full justify-center grid grid-cols-2 gap-4">
                           <button
-                            onClick={() => toast("Comment added")}
+                            onClick={() =>
+                              handleOnComment(row.id, "Ny kommentar")
+                            }
                             className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
                             Comment
                           </button>
                           <button
-                            onClick={() => toast("Forwarded")}
+                            onClick={() => handleOnForward(row.id)}
                             className="bg-yellow-500 text-white active:bg-yellow-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
@@ -111,7 +169,7 @@ const Table: React.FC<TableProps> = ({ data }) => {
                           </button>
 
                           <button
-                            onClick={() => toast.success("Approved")}
+                            onClick={() => handleOnApprove(row.id)}
                             className="bg-green-500 text-white active:bg-green-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >

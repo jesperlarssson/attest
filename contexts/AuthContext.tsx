@@ -1,9 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { NextPage } from 'next';
-import { credentials } from '@/lib/dummy-backend';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import { useRouter } from "next/navigation";
+import { NextPage } from "next";
 
 interface AuthContextType {
   user: UserType | null;
@@ -29,11 +34,11 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
     // TODO: Replace with actual user authentication logic with Infor M3 API
     const checkUserAuthentication = async () => {
       // Logic to check if the user is authenticated
-      const savedUser = localStorage.getItem('user');
+      const savedUser = localStorage.getItem("user");
       if (savedUser) {
         //setUser(JSON.parse(savedUser));
         const user = JSON.parse(savedUser);
-        login(user.employmentId, user.pincode)
+        login(user.employmentId, user.pincode);
       }
     };
 
@@ -41,19 +46,31 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
   }, []);
   const login = async (employmentId: string, pincode: string) => {
     // TODO: Replace with actual login logic with Infor M3 API
-    // On successful authentication:
-    if (credentials.employmentID === employmentId && credentials.pincode === pincode) {
-      const userData = { employmentId, pincode };
-      setUser(userData);
 
-      // Save to local storage
-      localStorage.setItem('user', JSON.stringify(userData));
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employmentId,
+          pincode,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-      // Redirect to the home page
-      router.push('/');
+      const userData = await response.json();
+      const user = { employmentId: userData.employmentId };
+      setUser(user);
+      console.log(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      router.push("/");
       return userData;
-    } else {
-      throw new Error("User is missing")
+    } catch (error) {
+      throw new Error("User is missing");
     }
   };
 
@@ -62,10 +79,10 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
     setUser(null);
 
     // Remove from local storage
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
 
     // Redirect to the login page
-    router.push('/login');
+    router.push("/login");
   };
 
   return (
