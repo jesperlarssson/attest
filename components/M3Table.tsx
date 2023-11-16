@@ -1,7 +1,7 @@
 "use client";
 
 import { useTableSettings } from "@/hooks/useTableSettings";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import PDFViewer from "./PdfViewer";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,77 +9,60 @@ import useCommentModal from "@/hooks/useModal";
 
 export type TableColumnSpec = {
   heading: string;
-  type: StringConstructor; // using StringConstructor for type as it's more accurate for a type specification
+  type: StringConstructor;
   active: boolean;
 };
 
+function mapToTableColumnSpecs(columns: string): TableColumnSpec[] {
+  return columns.split(";").map((columnName) => ({
+    heading: columnName,
+    type: String,
+    active: true,
+  }));
+}
+
 type TableProps = {
   data: any[]; // you would replace any with a more specific type that matches your row data structure
-  onInstanceApprovedForId: (id: number) => void;
+  onInstanceApprovedForId: (id: string) => void;
+  columnString: string;
 };
 
-const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
-  const [expandedRowId, setExpandedRowId] = useState<number | null>(null);
-  const { tableSpec } = useTableSettings();
-  const { user } = useAuth();
-  const { openModal } = useCommentModal();
+const M3Table: React.FC<TableProps> = ({
+  data,
+  onInstanceApprovedForId,
+  columnString,
+}) => {
+  const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
 
-  const handleRowClick = (id: number) => {
+  const initialTableDataSpec = mapToTableColumnSpecs(columnString);
+  const [tableSpec, setTableSpec] = useState<TableColumnSpec[]>();
+
+  useEffect(() => {
+    const columns = mapToTableColumnSpecs(columnString);
+    setTableSpec(columns);
+  }, []);
+
+  const handleRowClick = (id: string) => {
     setExpandedRowId(expandedRowId === id ? null : id);
   };
 
-  const handleOnApprove = async (id: number) => {
-    try {
-      const res = await fetch(`/api/invoice/${id}/approve`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          employmentId: user?.employmentId,
-        }),
-      });
-      const response = await res.json();
-      toast.success(response.message);
-      console.log(response)
-      onInstanceApprovedForId(id);
-    } catch (error: any) {
-      //TODO: handle error
-      toast.error(error.message);
-    }
-  };
+  const toggleColumnActive = (heading: string) => {
+    setTableSpec((currentSpec) => {
+      // Check if currentSpec is not null or undefined before mapping
+      if (!currentSpec) {
+        // Handle the case where currentSpec is null or undefined
+        // You could return an empty array or the initial state, for example
+        return initialTableDataSpec;
+      }
 
-  const handleOnForward = async (id: number) => {
-    try {
-      const res = await fetch(`/api/invoice/${id}/forward`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          employmentId: user?.employmentId,
-        }),
-      });
-      const response = await res.json();
-      toast.success(response.message);
-    } catch (error: any) {
-      //TODO: handle error
-      toast.error(error.message);
-    }
-  };
+      return currentSpec.map((column) =>
+        column.heading === heading
+          ? { ...column, active: !column.active }
+          : column
+      );
+    });
 
-  const handleOnComment = async (id: number, comment: string) => {
-    openModal();
-  };
-
-  const handleGetInvoice = async (id: number) => {
-    try {
-      const res = await fetch(`/api/invoice/${id}`);
-      const response = await res.json();
-      toast.success(response.message);
-    } catch (error: any) {
-      toast.error(error.message);
-    }
+    toast(`Updated visibility for ${heading}`);
   };
 
   if (data.length == 0 || !data) {
@@ -92,6 +75,9 @@ const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
 
   return (
     <div className="overflow-x-auto">
+      <div>
+        <button onClick={() => toggleColumnActive("EPDIVI")}>EDIT</button>
+      </div>
       <table className="min-w-full  border border-edge-light  dark:border-edge-dark">
         <thead>
           <tr>
@@ -127,7 +113,7 @@ const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
                         key={`${row.id}-${column.heading}`}
                         className="px-6 py-4 whitespace-nowrap text-sm font-medium"
                       >
-                        {row[column.heading.toLowerCase().replace(/\s+/g, "")]}{" "}
+                        {row[column.heading.replace(/\s+/g, "")]}{" "}
                       </td>
                     ))}
               </tr>
@@ -146,16 +132,14 @@ const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
                         <PDFViewer pdfURL={row.documentUrl} />
                         <div className=" text-gray-700 px-4 py-2 w-full justify-center grid grid-cols-2 gap-4">
                           <button
-                            onClick={() =>
-                              handleOnComment(row.id, "Ny kommentar")
-                            }
+                            onClick={() => {}}
                             className="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
                             Comment
                           </button>
                           <button
-                            onClick={() => handleOnForward(row.id)}
+                            onClick={() => {}}
                             className="bg-yellow-500 text-white active:bg-yellow-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
@@ -170,7 +154,7 @@ const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
                           </button>
 
                           <button
-                            onClick={() => handleOnApprove(row.id)}
+                            onClick={() => {}}
                             className="bg-green-500 text-white active:bg-green-600 font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                             type="button"
                           >
@@ -191,4 +175,4 @@ const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
   );
 };
 
-export default Table;
+export default M3Table;

@@ -1,9 +1,15 @@
+import { getInforM3MIv2Axios } from "@/services/infor";
+
 const approveInvoiceInM3 = async (employmentId: string, invoiceId: string) => {
   //TODO: add connection to M3
-
-  // Implement error handling and connection logic
-
-  return { status: "success", message: `Invoice ${invoiceId} approved in M3` };
+  try {
+    const response = await getInforM3MIv2Axios(
+      "/CRS650MI/GetUserInfo?dateformat=YMD8&excludeempty=false&righttrim=true&format=PRETTY&extendedresult=false"
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export async function POST(

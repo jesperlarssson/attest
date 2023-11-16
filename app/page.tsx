@@ -1,9 +1,11 @@
 "use client";
 
+import M3Table from "@/components/M3Table";
 import PageTitle from "@/components/PageTitle";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Table from "@/components/Table";
 import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -18,9 +20,59 @@ interface Invoice {
   // Include additional fields as needed based on your data structure
 }
 
+type RecordObject = {
+  [key: string]: string;
+};
+
+function transformData(
+  inputArray: Array<{ REPL: string }>,
+  idColumnName: string
+): RecordObject[] {
+  if (inputArray.length === 0) {
+    return [];
+  }
+
+  // Extract column names from the first element
+  const columnNames = inputArray[0].REPL.split(";");
+
+  // Find the index of the id column
+  const idColumnIndex = columnNames.indexOf(idColumnName);
+  if (idColumnIndex === -1) {
+    throw new Error(`Column name "${idColumnName}" not found.`);
+  }
+
+  // Transform the rest of the array
+  return inputArray.slice(1).map((item) => {
+    const values = item.REPL.split(";");
+    const record: RecordObject = {};
+
+    columnNames.forEach((columnName, index) => {
+      record[columnName] = values[index];
+    });
+
+    // Add the 'id' attribute
+    record["id"] = values[idColumnIndex];
+
+    return record;
+  });
+}
+
 const Home = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [invoicesFromM3, setInvoicesFromM3] = useState<any[]>([]);
+  const [columnString, setColumnString] = useState<string>();
   const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      const invoicesM3 = await axios.get("/api/invoice/get-pending");
+      console.log(invoicesM3.data[0].REPL);
+      setColumnString(invoicesM3.data[0].REPL);
+      const transformedData = transformData(invoicesM3.data, "EPVONO");
+      setInvoicesFromM3(transformedData);
+    };
+    fetchInvoices();
+  }, []);
 
   useEffect(() => {
     const checkForInvoices = async () => {
@@ -67,10 +119,17 @@ const Home = () => {
             </svg>
           </button>
         </div>
-        <Table
+        {/* <Table
           data={invoices}
           onInstanceApprovedForId={(id) => handleInstanceApproved(id)}
-        />
+        /> */}
+        {columnString && (
+          <M3Table
+            data={invoicesFromM3}
+            columnString={columnString}
+            onInstanceApprovedForId={() => {}}
+          />
+        )}
       </div>
     </ProtectedRoute>
   );
