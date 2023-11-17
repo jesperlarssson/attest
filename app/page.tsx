@@ -20,42 +20,6 @@ interface Invoice {
   // Include additional fields as needed based on your data structure
 }
 
-type RecordObject = {
-  [key: string]: string;
-};
-
-function transformData(
-  inputArray: Array<{ REPL: string }>,
-  idColumnName: string
-): RecordObject[] {
-  if (inputArray.length === 0) {
-    return [];
-  }
-
-  // Extract column names from the first element
-  const columnNames = inputArray[0].REPL.split(";");
-
-  // Find the index of the id column
-  const idColumnIndex = columnNames.indexOf(idColumnName);
-  if (idColumnIndex === -1) {
-    throw new Error(`Column name "${idColumnName}" not found.`);
-  }
-
-  // Transform the rest of the array
-  return inputArray.slice(1).map((item) => {
-    const values = item.REPL.split(";");
-    const record: RecordObject = {};
-
-    columnNames.forEach((columnName, index) => {
-      record[columnName] = values[index];
-    });
-
-    // Add the 'id' attribute
-    record["id"] = values[idColumnIndex];
-
-    return record;
-  });
-}
 
 const Home = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -66,10 +30,10 @@ const Home = () => {
   useEffect(() => {
     const fetchInvoices = async () => {
       const invoicesM3 = await axios.get("/api/invoice/get-pending");
-      console.log(invoicesM3.data[0].REPL);
-      setColumnString(invoicesM3.data[0].REPL);
-      const transformedData = transformData(invoicesM3.data, "EPVONO");
-      setInvoicesFromM3(transformedData);
+      setInvoicesFromM3(invoicesM3.data);
+      setColumnString(invoicesM3.data[0].REPL)
+      console.log(invoicesM3.data);
+      
     };
     fetchInvoices();
   }, []);
@@ -78,7 +42,7 @@ const Home = () => {
     const checkForInvoices = async () => {
       try {
         const res = await fetch(
-          `/api/invoice/get-pending/${user?.employmentId}`
+          `/api/invoice/get-pending/${user?.id}`
         );
         const response = await res.json();
         setInvoices(response);
@@ -126,8 +90,7 @@ const Home = () => {
         {columnString && (
           <M3Table
             data={invoicesFromM3}
-            columnString={columnString}
-            onInstanceApprovedForId={() => {}}
+            idAttribute="EPVONO"
           />
         )}
       </div>

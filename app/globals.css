@@ -29,3 +29,8 @@ body {
   --tw-bg-opacity: 1;
   background-color: rgb(var(--background-start-rgb));
 }
+
+
+.width-custom {
+  max-width: calc(100vw - 20rem); /* 5rem is equivalent to w-20 (1rem = 4 units in Tailwind) */
+}

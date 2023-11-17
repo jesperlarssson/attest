@@ -9,10 +9,11 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { NextPage } from "next";
+import { User } from "@/types";
 
 interface AuthContextType {
-  user: UserType | null;
-  login: (employmentId: string, pincode: string) => Promise<UserType>;
+  user: User | null;
+  login: (employmentId: string, pincode: string) => Promise<User>;
   logout: () => void;
 }
 
@@ -24,10 +25,12 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+
+
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<UserType | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,19 +45,20 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
       }
     };
 
-    checkUserAuthentication();
+    //checkUserAuthentication();
   }, []);
   const login = async (employmentId: string, pincode: string) => {
     // TODO: Replace with actual login logic with Infor M3 API
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/auth/m3/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           employmentId,
+          divi: "CCC",
           pincode,
         }),
       });
@@ -63,9 +67,8 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
       }
 
       const userData = await response.json();
-      const user = { employmentId: userData.employmentId };
-      setUser(user);
-      console.log(user);
+      setUser(userData);
+      console.log(userData);
       localStorage.setItem("user", JSON.stringify(user));
       router.push("/");
       return userData;

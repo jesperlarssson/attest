@@ -62,6 +62,12 @@ const Sidebar: React.FC<SidebarProps> = ({
               expanded={isSidebarOpen}
             />
             <SidebarLink
+              icon={<InvoiceIcon />}
+              label="SQL"
+              href="/sql"
+              expanded={isSidebarOpen}
+            />
+            <SidebarLink
               icon={
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -94,9 +100,9 @@ const Sidebar: React.FC<SidebarProps> = ({
         {user && isSidebarOpen && (
           <div className="pt-10 text-sm">
             <div className="flex flex-col items-center">
-              <div className="mb-4 p-4 bg-black bg-opacity-10 rounded-md w-full text-center text-xs shadow-inner flex flex-col">
-                <span>Logged in as:</span> <strong className="tracking-wider">{user.employmentId}</strong>
-              </div>
+              <Link href="/user" className="mb-4 p-4 bg-black bg-opacity-10 hover:bg-opacity-20 rounded-md w-full text-center text-xs shadow-inner flex flex-col">
+                <span>Logged in as:</span> <strong className="tracking-wider">{user.name}</strong>
+              </Link>
               <button
                 onClick={() => logout()}
                 className="underline text-sm   py-2 px-4 rounded transition duration-150 ease-in-out w-full"

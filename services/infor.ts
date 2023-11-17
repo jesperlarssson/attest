@@ -109,6 +109,18 @@ async function postInforM3MIv2Axios(
   }
 }
 
+async function getSqlSelect(query: string): Promise<any> {
+    try {
+        const list = await getInforM3MIv2Axios(
+          `/EXPORTMI/Select?SEPC=;&HDRS=1&QERY=${query}`
+        );
+        return list.results[0].records;
+      } catch (error) {
+        console.log(error)
+        throw error;
+      }
+}
+
 async function getIDMAxios(apiUrl: string): Promise<any> {
   try {
     const token = await getOAuthToken();
@@ -135,4 +147,4 @@ async function getIDMAxios(apiUrl: string): Promise<any> {
   }
 }
 
-export { getInforM3MIv2Axios, postInforM3MIv2Axios };
+export { getInforM3MIv2Axios, postInforM3MIv2Axios, getSqlSelect };

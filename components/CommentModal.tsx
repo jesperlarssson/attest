@@ -19,7 +19,7 @@ const CommentModal = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          employmentId: user?.employmentId,
+          employmentId: user?.id,
           comment: comment,
         }),
       });

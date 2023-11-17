@@ -36,7 +36,7 @@ const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          employmentId: user?.employmentId,
+          employmentId: user?.id,
         }),
       });
       const response = await res.json();
@@ -57,7 +57,7 @@ const Table: React.FC<TableProps> = ({ data, onInstanceApprovedForId }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          employmentId: user?.employmentId,
+          employmentId: user?.id,
         }),
       });
       const response = await res.json();

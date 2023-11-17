@@ -1,17 +1,53 @@
 "use client";
 
-import { useTableSettings } from "@/hooks/useTableSettings";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import PDFViewer from "./PdfViewer";
-import { useAuth } from "@/contexts/AuthContext";
-import useCommentModal from "@/hooks/useModal";
 
 export type TableColumnSpec = {
   heading: string;
   type: StringConstructor;
   active: boolean;
 };
+
+type RecordObject = {
+  [key: string]: string;
+};
+
+function transformData(
+  inputArray: Array<{ REPL: string }>,
+  idColumnName?: string | null
+): RecordObject[] {
+  if (inputArray.length === 0) {
+    return [];
+  }
+
+  // Extract column names from the first element
+  const columnNames = inputArray[0].REPL.split(";"); //TODO: byta separerare?
+
+  
+    // Find the index of the id column
+    const idColumnIndex = columnNames.indexOf(idColumnName ?? "");
+    // if (idColumnIndex === -1) {
+    //   throw new Error(`Column name "${idColumnName}" not found.`);
+    // }
+  
+
+  // Transform the rest of the array
+  return inputArray.slice(1).map((item) => {
+    const values = item.REPL.split(";");
+    const record: RecordObject = {};
+
+    columnNames.forEach((columnName, index) => {
+      record[columnName] = values[index];
+    });
+
+    // Add the 'id' attribute
+    record["id"] = values[idColumnIndex];
+
+    return record;
+  });
+}
 
 function mapToTableColumnSpecs(columns: string): TableColumnSpec[] {
   return columns.split(";").map((columnName) => ({
@@ -22,28 +58,31 @@ function mapToTableColumnSpecs(columns: string): TableColumnSpec[] {
 }
 
 type TableProps = {
-  data: any[]; // you would replace any with a more specific type that matches your row data structure
-  onInstanceApprovedForId: (id: string) => void;
-  columnString: string;
+  data: any[];
+  idAttribute: string | null;
 };
 
 const M3Table: React.FC<TableProps> = ({
   data,
-  onInstanceApprovedForId,
-  columnString,
+  idAttribute = null,
 }) => {
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
 
-  const initialTableDataSpec = mapToTableColumnSpecs(columnString);
+  const initialTableDataSpec = mapToTableColumnSpecs(data[0].REPL);
   const [tableSpec, setTableSpec] = useState<TableColumnSpec[]>();
+  const [rows, setRows] = useState<any[]>([]);
 
   useEffect(() => {
-    const columns = mapToTableColumnSpecs(columnString);
+    const columns = mapToTableColumnSpecs(data[0].REPL);
+    const passedRows = transformData(data, idAttribute);
+    setRows(passedRows);
     setTableSpec(columns);
   }, []);
 
   const handleRowClick = (id: string) => {
-    setExpandedRowId(expandedRowId === id ? null : id);
+    if (idAttribute) {
+      setExpandedRowId(expandedRowId === id ? null : id);
+    }
   };
 
   const toggleColumnActive = (heading: string) => {
@@ -65,7 +104,7 @@ const M3Table: React.FC<TableProps> = ({
     toast(`Updated visibility for ${heading}`);
   };
 
-  if (data.length == 0 || !data) {
+  if (rows.length == 0 || !rows) {
     return (
       <div className="w-full h-full flex justify-center items-center font-semibold tracking-wide text-lg text-slate-400">
         Nothing to attest...
@@ -75,9 +114,9 @@ const M3Table: React.FC<TableProps> = ({
 
   return (
     <div className="overflow-x-auto">
-      <div>
+      {/* <div>
         <button onClick={() => toggleColumnActive("EPDIVI")}>EDIT</button>
-      </div>
+      </div> */}
       <table className="min-w-full  border border-edge-light  dark:border-edge-dark">
         <thead>
           <tr>
@@ -95,8 +134,8 @@ const M3Table: React.FC<TableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {data.map((row, rowIndex) => (
-            <React.Fragment key={row.id || rowIndex}>
+          {rows.map((row, rowIndex) => (
+            <React.Fragment key={`${row.id}-${rowIndex}` || rowIndex}>
               <tr
                 onClick={() => handleRowClick(row.id)}
                 className={`cursor-pointer transition-colors hover:bg-black hover:bg-opacity-10 ${
@@ -127,7 +166,7 @@ const M3Table: React.FC<TableProps> = ({
                     }`}
                   >
                     {/* Expanded content goes here, e.g., a div with more info and action buttons */}
-                    {expandedRowId === row.id && (
+                    {expandedRowId === row.id && idAttribute && (
                       <div className="grid sm:grid-cols-2 gap-4">
                         <PDFViewer pdfURL={row.documentUrl} />
                         <div className=" text-gray-700 px-4 py-2 w-full justify-center grid grid-cols-2 gap-4">
