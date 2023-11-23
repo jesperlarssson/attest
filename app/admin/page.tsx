@@ -30,7 +30,7 @@ const Home = () => {
   const fetchTransactions = async () => {
     try {
       const res = await axios.get(
-        `/api/invoice/get-pending/${user?.id}/transactions`
+        `/api/invoice/admin/transactions`
       );
       const sortedTransactions = res.data.sort(
         (a: any, b: any) =>
@@ -44,9 +44,7 @@ const Home = () => {
 
   const checkForInvoices = async () => {
     try {
-      const res = await axios.get(
-        `/api/invoice/get-pending/${user?.id}/with-invoice-info`
-      );
+      const res = await axios.get(`/api/invoice/admin/get-invoices`);
       setInvoices(res.data);
     } catch (error) {
       toast.error("Error fetching invoices");
@@ -77,21 +75,11 @@ const Home = () => {
   //   );
   // };
 
-  if (!invoices || !transactions) {
-    return (
-      <ProtectedRoute>
-        <div className="w-full h-full flex justify-center items-center">
-          <div className="animate-pulse rounded-full bg-slate-400 w-10 h-10"></div>
-        </div>
-      </ProtectedRoute>
-    );
-  }
-
   return (
     <ProtectedRoute>
       <div className="flex w-full flex-col ">
         <div className="w-full flex justify-between items-center mb-4">
-          <PageTitle>Invoices</PageTitle>
+          <PageTitle>Admin Invoices</PageTitle>
           <button
             onClick={async () => {
               const res = reload();
@@ -121,7 +109,17 @@ const Home = () => {
 
         {invoices && (
           <div className="py-4">
-            <InvoiceTable data={invoices} />
+            <InvoiceTable
+              data={invoices}
+              activeColumns={[
+                "SUNO",
+                "SINO",
+                "OAMT",
+                "LOCD",
+                "F1A130",
+                "F1A530",
+              ]}
+            />
           </div>
         )}
 

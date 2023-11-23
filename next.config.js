@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
+    images: {
+      domains: ['idm.eu1.inforcloudsuite.com'],
+    },
     async headers() {
         return [
           {

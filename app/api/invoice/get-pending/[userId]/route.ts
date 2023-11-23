@@ -1,3 +1,4 @@
+
 import { getCugexInstancesForUserId } from "@/services/infor";
 
 const getAllInvoicesForUser = async (userId: string) => {

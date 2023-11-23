@@ -1,13 +1,16 @@
 import { transformData } from "@/lib/transformM3Data";
 import {
   getCugexInstancesForUserId,
+  getInforM3MIv2Axios,
   getSupplierInvoiceTotalInfo,
 } from "@/services/infor";
 
-const getAllInvoicesForUser = async (userId: string) => {
+const getAllInvoices = async () => {
   try {
-    const res = await getCugexInstancesForUserId(userId);
-    const transformedRes = transformData(res);
+    const list = await getInforM3MIv2Axios(
+      `/EXPORTMI/Select?SEPC=;&HDRS=1&QERY=F1PK01, F1PK02, F1PK03, F1PK04, F1A030, F1A130, F1A230, F1A330, F1A430, F1A530 from CUGEX1 where F1FILE = 'MATE_H'`
+    );
+    const transformedRes = transformData(list.results[0].records);
 
     // Create an array of promises
     const invoicePromises = transformedRes.map(async (cugexInfo) => {
@@ -49,11 +52,10 @@ const getAllInvoicesForUser = async (userId: string) => {
 
 export async function GET(
   request: Request,
-  { params }: { params: { userId: string } }
 ) {
-  const userId = params.userId;
+
   try {
-    const list = await getAllInvoicesForUser(userId);
+    const list = await getAllInvoices();
     return Response.json(list);
   } catch (error) {
     throw error;

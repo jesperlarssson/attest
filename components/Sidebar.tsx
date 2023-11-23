@@ -63,6 +63,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             />
             <SidebarLink
               icon={<InvoiceIcon />}
+              label="Admin"
+              href="/admin"
+              expanded={isSidebarOpen}
+            />
+            <SidebarLink
+              icon={<InvoiceIcon />}
               label="SQL"
               href="/sql"
               expanded={isSidebarOpen}

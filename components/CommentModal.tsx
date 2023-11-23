@@ -6,27 +6,28 @@ import useCommentModal from "@/hooks/useModal";
 import { useAuth } from "@/contexts/AuthContext";
 import toast from "react-hot-toast";
 import useModal from "@/hooks/useModal";
+import axios from "axios";
 
 const CommentModal = () => {
   const { isModalOpen, id, closeModal } = useModal();
   const { user, logout } = useAuth();
 
-  const handleOnComment = async (id: string, comment: string) => {
+  const handleOnComment = async (id: any, comment: string) => {
     try {
-      const res = await fetch(`/api/invoice/${id}/comment`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          employmentId: user?.id,
-          comment: comment,
-        }),
+      const res = axios.post("/api/invoice/comment", {
+        file: "MATE_H",
+        pk01: id.pk01,
+        pk02: id.pk02,
+        pk03: id.pk03,
+        user: user?.id,
+        a530: comment,
       });
-      const response = await res.json();
-      toast.success(response.message);
+      toast.promise(res, {
+        loading: "Loading",
+        success: "Successfully Commented",
+        error: "Failed to comment",
+      });
     } catch (error: any) {
-      //TODO: handle error
       toast.error(error.message);
     } finally {
       closeModal();
@@ -40,7 +41,6 @@ const CommentModal = () => {
     const comment = (e.target as any).elements.comment.value;
 
     handleOnComment(id, comment);
-   
   };
 
   return (

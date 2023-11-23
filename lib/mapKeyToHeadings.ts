@@ -67,10 +67,14 @@ export const mapKeyToHeading = (key: string): string => {
     ROCU: "Return Currency",
     ROAM: "Return Amount",
     TDS1: "Tax Deduction Source 1",
-    F1PK01: "Cugex Date",
-    F1PK02: "Cugex F1PK02",
-    F1PK03: "Cugex F1PK03",
-    F1A030: "Cugex F1A030",
+    F1PK01: "Invoice Date",
+    F1PK02: "Supplier Number",
+    F1PK03: "Supplier Invoice Number",
+    F1A030: "Status",
+    F1A130: "User Id",
+    F1A230: "Event Description",
+    F1A330: "Event timestamp",
+    F1A530: "Comment",
     id: "Identifier",
   };
 

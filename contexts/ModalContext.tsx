@@ -7,17 +7,30 @@ import React, {
   ReactNode,
 } from "react";
 
+interface InvoiceKey {
+  pk01: string;
+  pk02: string;
+  pk03: string;
+}
+
 // TypeScript interface for the context state
 export interface ModalContextType {
   isModalOpen: boolean;
-  id: string;
-  openModal: (id: string) => void;
+  id: InvoiceKey;
+  openModal: (id: InvoiceKey) => void;
   closeModal: () => void;
 }
 
+// Define a default value
+const defaultModalContext: ModalContextType = {
+  isModalOpen: false,
+  id: { pk01: "", pk02: "", pk03: "" }, // Default values for InvoiceKey
+  openModal: () => {}, // No-op functions for default
+  closeModal: () => {},
+};
 // Create a context with a default value
 export const ModalContext = createContext<ModalContextType | undefined>(
-  undefined
+  defaultModalContext
 );
 
 // Provider component with type annotations
@@ -25,9 +38,9 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [id, setId] = useState("");
+  const [id, setId] = useState<InvoiceKey>({ pk01: "", pk02: "", pk03: "" });
 
-  const openModal = useCallback((id: string) => {
+  const openModal = useCallback((id: InvoiceKey) => {
     setId(id);
     setIsModalOpen(true);
   }, []);

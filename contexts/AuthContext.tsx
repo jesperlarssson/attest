@@ -39,13 +39,14 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
       // Logic to check if the user is authenticated
       const savedUser = localStorage.getItem("user");
       if (savedUser) {
-        //setUser(JSON.parse(savedUser));
-        const user = JSON.parse(savedUser);
-        login(user.employmentId, user.pincode);
+        setUser(JSON.parse(savedUser));
+        router.push("/");
+        // const user = JSON.parse(savedUser);
+        // login(user.employmentId, user.pincode);
       }
     };
 
-    //checkUserAuthentication();
+    checkUserAuthentication();
   }, []);
   const login = async (employmentId: string, pincode: string) => {
     // TODO: Replace with actual login logic with Infor M3 API
@@ -69,7 +70,7 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
       const userData = await response.json();
       setUser(userData);
       console.log(userData);
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(userData));
       router.push("/");
       return userData;
     } catch (error) {

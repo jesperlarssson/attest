@@ -5,9 +5,7 @@ import React, { ReactNode, useState, useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import Sidebar from "./Sidebar";
 import Image from "next/image";
-import CollapseButton from "./CollapseButton";
 import { usePathname } from "next/navigation";
-import useCommentModal from "@/hooks/useModal";
 import CommentModal from "./CommentModal";
 import ContextViewer from "./ContextViewer";
 
@@ -16,15 +14,29 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
+    const saved = localStorage.getItem("sidebarOpen");
+    return saved ? JSON.parse(saved).value : true;
+  });
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const [domLoaded, setDomLoaded] = useState(false);
 
-
+  useEffect(() => {
+    localStorage.setItem(
+      "sidebarOpen",
+      JSON.stringify({ value: isSidebarOpen })
+    );
+  }, [isSidebarOpen]);
 
   useEffect(() => {
+    const sidebarOpen = localStorage.getItem("sidebarOpen");
+    if (sidebarOpen) {
+      setIsSidebarOpen(JSON.parse(sidebarOpen).value);
+    } else {
+      setIsSidebarOpen(true);
+    }
     setDomLoaded(true);
   }, []);
 
@@ -36,7 +48,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen ">
-      <Sidebar isSidebarOpen={isSidebarOpen} onToggleSidebar={toggleSidebar} />
+      <Sidebar
+        isSidebarOpen={isSidebarOpen ?? true}
+        onToggleSidebar={toggleSidebar}
+      />
 
       {/* Main content area */}
       <main
@@ -47,7 +62,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <>{children}</>
       </main>
       <ContextViewer />
-      
+
       <div className="fixed bottom-0 right-0 p-4 z-0 opacity-50">
         <Image
           src={"/images/meridion-white.png"}
@@ -58,7 +73,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
       {domLoaded && <Toaster position="bottom-right" />}
       <CommentModal />
-     
     </div>
   );
 };

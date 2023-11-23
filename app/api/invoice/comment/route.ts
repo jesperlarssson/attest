@@ -13,9 +13,9 @@ export async function POST(request: Request) {
       pk05: new Date().toISOString(),
       a030: "1",
       a130: body.user,
-      a230: `Approved by ${body.user}`,
+      a230: `${body.user} changed the comment field.`,
       a330: new Date().toISOString(),
-      a430: body.a030 + body.a030,
+      a530: body.a530,
     };
     const response = await postToCugex(eventObject);
     return Response.json(res);
