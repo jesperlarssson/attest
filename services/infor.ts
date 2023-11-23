@@ -196,8 +196,8 @@ async function postToCugex(body: any) {
   if (pk01) queryParams.append("PK01", pk01);
   if (pk02) queryParams.append("PK02", pk02);
   if (pk03) queryParams.append("PK03", pk03);
-  if (pk03) queryParams.append("PK04", pk04);
-  if (pk03) queryParams.append("PK05", pk05);
+  if (pk04) queryParams.append("PK04", pk04);
+  if (pk05) queryParams.append("PK05", pk05);
   if (a030) queryParams.append("A030", a030);
   if (a130) queryParams.append("A130", a130);
   if (a230) queryParams.append("A230", a230);
@@ -207,10 +207,12 @@ async function postToCugex(body: any) {
 
   queryParams.append("maxrecs", "0");
 
+  console.log(`/CUSEXTMI/AddFieldValue?${queryParams.toString()}`)
   try {
     const list = await getInforM3MIv2Axios(
       `/CUSEXTMI/AddFieldValue?${queryParams.toString()}`
     );
+    console.log(list)
     return list.results[0].records[0];
   } catch (error) {
     throw error;

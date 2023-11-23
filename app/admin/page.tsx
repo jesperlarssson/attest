@@ -29,9 +29,7 @@ const Home = () => {
 
   const fetchTransactions = async () => {
     try {
-      const res = await axios.get(
-        `/api/invoice/admin/transactions`
-      );
+      const res = await axios.get(`/api/invoice/admin/transactions`);
       const sortedTransactions = res.data.sort(
         (a: any, b: any) =>
           new Date(b.F1A330).getTime() - new Date(a.F1A330).getTime()
@@ -74,6 +72,15 @@ const Home = () => {
   //     currentInvoices.filter((invoice) => invoice.id !== id)
   //   );
   // };
+  if (!invoices || !transactions) {
+    return (
+      <ProtectedRoute>
+        <div className="w-full h-full flex justify-center items-center">
+          <div className="animate-pulse rounded-full bg-slate-400 w-10 h-10"></div>
+        </div>
+      </ProtectedRoute>
+    );
+  }
 
   return (
     <ProtectedRoute>

@@ -74,8 +74,11 @@ const Table: React.FC<TableProps> = ({
           {tableSpec?.map((column) => {
             return (
               <button
+                key={column.M3Heading}
                 title={
-                  column.active ? "Click to deactivate" : "Click to activate"
+                  column.active
+                    ? `Click to deactivate (${column.M3Heading})`
+                    : `Click to activate (${column.M3Heading})`
                 }
                 onClick={() => toggleColumnActive(column.M3Heading)}
                 className={twMerge(
@@ -91,12 +94,12 @@ const Table: React.FC<TableProps> = ({
           })}
         </div>
       )}
-      <div className="overflow-x-auto">
-        <table
-          title="Double-click to edit"
-          className="min-w-full  border border-edge-light  dark:border-edge-dark"
-        >
-          <thead onDoubleClick={() => setEditModeOpen(!editModeOpen)}>
+      <div className="overflow-x-auto rounded-lg shadow-lg">
+        <table className="min-w-full  border border-edge-light  dark:border-edge-dark">
+          <thead
+            title="Double-click to edit"
+            onDoubleClick={() => setEditModeOpen(!editModeOpen)}
+          >
             <tr>
               {tableSpec &&
                 tableSpec
