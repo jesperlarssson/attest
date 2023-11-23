@@ -18,7 +18,7 @@ const commentInvoiceInM3 = async (employmentId: string, invoiceId: string, comme
     }
   
     try {
-      const res = await commentInvoiceInM3(data.employmentId, id as string, data.comment);
+      const res = await commentInvoiceInM3(data.employmentId, id, data.comment);
   
       return Response.json({
         message: `${data.employmentId} commented invoice id: ${id} with ${data.comment}`,

@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import PDFViewer from "./PdfViewer";
+import { useContextViewer } from "@/contexts/ViewerContext";
+import ContextInvoice from "./ContextInvoice";
+import { transformData } from "@/lib/transformM3Data";
 
 export type TableColumnSpec = {
   heading: string;
@@ -10,44 +13,7 @@ export type TableColumnSpec = {
   active: boolean;
 };
 
-type RecordObject = {
-  [key: string]: string;
-};
 
-function transformData(
-  inputArray: Array<{ REPL: string }>,
-  idColumnName?: string | null
-): RecordObject[] {
-  if (inputArray.length === 0) {
-    return [];
-  }
-
-  // Extract column names from the first element
-  const columnNames = inputArray[0].REPL.split(";"); //TODO: byta separerare?
-
-  
-    // Find the index of the id column
-    const idColumnIndex = columnNames.indexOf(idColumnName ?? "");
-    // if (idColumnIndex === -1) {
-    //   throw new Error(`Column name "${idColumnName}" not found.`);
-    // }
-  
-
-  // Transform the rest of the array
-  return inputArray.slice(1).map((item) => {
-    const values = item.REPL.split(";");
-    const record: RecordObject = {};
-
-    columnNames.forEach((columnName, index) => {
-      record[columnName] = values[index];
-    });
-
-    // Add the 'id' attribute
-    record["id"] = values[idColumnIndex];
-
-    return record;
-  });
-}
 
 function mapToTableColumnSpecs(columns: string): TableColumnSpec[] {
   return columns.split(";").map((columnName) => ({
@@ -62,11 +28,9 @@ type TableProps = {
   idAttribute: string | null;
 };
 
-const M3Table: React.FC<TableProps> = ({
-  data,
-  idAttribute = null,
-}) => {
+const M3Table: React.FC<TableProps> = ({ data, idAttribute = null }) => {
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
+  const { openViewer } = useContextViewer();
 
   const initialTableDataSpec = mapToTableColumnSpecs(data[0].REPL);
   const [tableSpec, setTableSpec] = useState<TableColumnSpec[]>();
@@ -79,9 +43,19 @@ const M3Table: React.FC<TableProps> = ({
     setTableSpec(columns);
   }, []);
 
-  const handleRowClick = (id: string) => {
+  const handleRowClick = (row: any) => {
+    console.log(row);
     if (idAttribute) {
-      setExpandedRowId(expandedRowId === id ? null : id);
+      openViewer(
+        <ContextInvoice
+          invoiceId={row.id}
+          amount={row.EPCUAM}
+          currency={row.EPCUCD}
+          epdudt={row.EPDUDT}
+          epivdt={row.EPIVDT}
+          pdfUrl="/docs/invoice.pdf"
+        ></ContextInvoice>
+      );
     }
   };
 
@@ -126,18 +100,18 @@ const M3Table: React.FC<TableProps> = ({
                 .map((column) => (
                   <th
                     key={column.heading}
-                    className="px-6 py-3 border-b border-gray-200 dark:border-edge-dark bg-card-light dark:bg-card-dark text-left text-xs font-medium  uppercase tracking-wider"
+                    className="px-6 py-3 border-b border-gray-200 dark:border-edge-dark bg-slate-600 text-white dark:bg-slate-600 text-left text-xs font-medium  uppercase tracking-wider"
                   >
                     {column.heading}
                   </th>
                 ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-white dark:bg-card-dark">
           {rows.map((row, rowIndex) => (
             <React.Fragment key={`${row.id}-${rowIndex}` || rowIndex}>
               <tr
-                onClick={() => handleRowClick(row.id)}
+                onClick={() => handleRowClick(row)}
                 className={`cursor-pointer transition-colors hover:bg-black hover:bg-opacity-10 ${
                   expandedRowId === row.id
                     ? "bg-black bg-opacity-20 hover:bg-slate-300"

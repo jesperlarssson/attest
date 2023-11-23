@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             </span>
             {isSidebarOpen && (
               <span
-                className={`text-xs font-light text-accent-light dark:text-accent-dark`}
+                className={`text-xs font-light text-slate-400 dark:text-accent-dark`}
               >
                 Meridion Attestation Tool Etc
               </span>

@@ -9,6 +9,7 @@ import CollapseButton from "./CollapseButton";
 import { usePathname } from "next/navigation";
 import useCommentModal from "@/hooks/useModal";
 import CommentModal from "./CommentModal";
+import ContextViewer from "./ContextViewer";
 
 type LayoutProps = {
   children: ReactNode;
@@ -45,6 +46,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         <>{children}</>
       </main>
+      <ContextViewer />
+      
       <div className="fixed bottom-0 right-0 p-4 z-0 opacity-50">
         <Image
           src={"/images/meridion-white.png"}
@@ -55,6 +58,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
       {domLoaded && <Toaster position="bottom-right" />}
       <CommentModal />
+     
     </div>
   );
 };

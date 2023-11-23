@@ -1,5 +1,6 @@
 "use client";
 
+import InvoiceTable from "@/components/InvoiceTable";
 import M3Table from "@/components/M3Table";
 import PageTitle from "@/components/PageTitle";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -20,44 +21,61 @@ interface Invoice {
   // Include additional fields as needed based on your data structure
 }
 
-
 const Home = () => {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [invoices, setInvoices] = useState();
+  const [transactions, setTransactions] = useState();
   const [invoicesFromM3, setInvoicesFromM3] = useState<any[]>([]);
   const [columnString, setColumnString] = useState<string>();
   const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchInvoices = async () => {
+  const fetchInvoices = async () => {
+    try {
       const invoicesM3 = await axios.get("/api/invoice/get-pending");
       setInvoicesFromM3(invoicesM3.data);
-      setColumnString(invoicesM3.data[0].REPL)
-      console.log(invoicesM3.data);
-      
-    };
-    fetchInvoices();
-  }, []);
+      setColumnString(invoicesM3.data[0].REPL);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      const res = await axios.get(
+        `/api/invoice/get-pending/${user?.id}/transactions`
+      );
+      setTransactions(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const checkForInvoices = async () => {
-      try {
-        const res = await fetch(
-          `/api/invoice/get-pending/${user?.id}`
-        );
-        const response = await res.json();
-        setInvoices(response);
-      } catch (error) {}
-    };
+    fetchInvoices();
+  }, []);
+  const checkForInvoices = async () => {
+    try {
+      const res = await axios.get(
+        `/api/invoice/get-pending/${user?.id}/with-invoice-info`
+      );
+      setInvoices(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
     if (user) {
+      fetchTransactions();
       checkForInvoices();
     }
   }, [user]);
 
-  const handleInstanceApproved = (id: number) => {
-    setInvoices((currentInvoices) =>
-      currentInvoices.filter((invoice) => invoice.id !== id)
-    );
-  };
+  // const handleInstanceApproved = (id: number) => {
+  //   setInvoices((currentInvoices) =>
+  //     currentInvoices.filter((invoice) => invoice.id !== id)
+  //   );
+  // };
 
   return (
     <ProtectedRoute>
@@ -65,7 +83,14 @@ const Home = () => {
         <div className="w-full flex justify-between items-center mb-4">
           <PageTitle>Invoices</PageTitle>
           <button
-            onClick={() => toast.error("Failed to reload")}
+            onClick={async () => {
+              const res = checkForInvoices();
+              toast.promise(res, {
+                loading: "Loading",
+                success: "Reloaded invoices",
+                error: "Reload failed",
+              });
+            }}
             className="h-10 w-10 flex items-center justify-center rounded-lg cursor-pointer opacity-40 hover:opacity-100 hover:text-gray-800 hover:bg-gray-400  hover:duration-300 hover:ease-linear focus:bg-white"
           >
             <svg
@@ -87,11 +112,18 @@ const Home = () => {
           data={invoices}
           onInstanceApprovedForId={(id) => handleInstanceApproved(id)}
         /> */}
-        {columnString && (
-          <M3Table
-            data={invoicesFromM3}
-            idAttribute="EPVONO"
-          />
+        {/* {columnString && <M3Table data={invoicesFromM3} idAttribute="EPVONO" />} */}
+        {invoices && (
+          <div className="py-4">
+            <InvoiceTable data={invoices} />
+            {/* <M3Table data={invoices} idAttribute={"F1PK03"} /> */}
+          </div>
+        )}
+
+        {transactions && (
+          <div className="py-4">
+            <InvoiceTable data={transactions} />
+          </div>
         )}
       </div>
     </ProtectedRoute>

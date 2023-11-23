@@ -5,6 +5,7 @@ import { useTableSettings } from "@/hooks/useTableSettings";
 import { getInforM3MIv2Axios } from "@/services/infor";
 import toast from "react-hot-toast";
 import axios from "axios";
+import ThemeButton from "@/components/ThemeButton";
 
 interface ApiUser {
   ZZUSID: string;
@@ -135,6 +136,7 @@ const SettingsContent = () => {
           </div>
         </div>
       </div>
+     
     </div>
   );
 };
