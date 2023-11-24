@@ -3,22 +3,19 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import PDFViewer from "./PdfViewer";
-import { useContextViewer } from "@/contexts/ViewerContext";
-import ContextInvoice from "./ContextInvoice";
+
 import { transformData } from "@/lib/transformM3Data";
 
 export type TableColumnSpec = {
   heading: string;
-  type: StringConstructor;
+  type: string;
   active: boolean;
 };
-
-
 
 function mapToTableColumnSpecs(columns: string): TableColumnSpec[] {
   return columns.split(";").map((columnName) => ({
     heading: columnName,
-    type: String,
+    type: "String",
     active: true,
   }));
 }
@@ -33,15 +30,12 @@ const M3Table: React.FC<TableProps> = ({ data, idAttribute = null }) => {
   const [tableSpec, setTableSpec] = useState<TableColumnSpec[]>();
   const [rows, setRows] = useState<any[]>([]);
 
-  const initialTableDataSpec = mapToTableColumnSpecs(data[0].REPL);
-
   useEffect(() => {
     const columns = mapToTableColumnSpecs(data[0].REPL);
     const passedRows = transformData(data, idAttribute);
     setRows(passedRows);
     setTableSpec(columns);
   }, [data, idAttribute]);
-
 
   if (rows.length == 0 || !rows) {
     return (
