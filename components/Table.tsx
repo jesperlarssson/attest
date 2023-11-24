@@ -38,10 +38,12 @@ const Table: React.FC<TableProps> = ({
       active: activeColumns.includes(key),
     }));
   };
-
-  const initialTableDataSpec = createTableColumnSpecs(data[0]);
   const [tableSpec, setTableSpec] = useState<TableColumnSpec[]>();
   const [rows, setRows] = useState<any[]>(data);
+  const [editModeOpen, setEditModeOpen] = useState<boolean>(false);
+
+  const initialTableDataSpec =
+    data && data.length > 0 ? createTableColumnSpecs(data[0]) : [];
 
   const setColumnSetupFromStringArray = (list: string[]) => {
     setTableSpec((currentSpec) => {
@@ -55,16 +57,6 @@ const Table: React.FC<TableProps> = ({
       }));
     });
   };
-
-  useEffect(() => {
-    setTableSpec(initialTableDataSpec);
-    setRows(data);
-    const savedColumnSetup = localStorage.getItem(tableId);
-    if (savedColumnSetup) {
-      const savedColumnSetupObject = JSON.parse(savedColumnSetup);
-      setColumnSetupFromStringArray(savedColumnSetupObject);
-    }
-  }, []);
 
   const toggleColumnActive = (heading: string) => {
     setTableSpec((currentSpec) => {
@@ -94,12 +86,20 @@ const Table: React.FC<TableProps> = ({
     toast(`Updated visibility for ${heading}`);
   };
 
-  const [editModeOpen, setEditModeOpen] = useState<boolean>(false);
-
   const handleUseDefault = () => {
     setColumnSetupFromStringArray(activeColumns);
     localStorage.setItem(tableId, JSON.stringify(activeColumns));
   };
+
+  useEffect(() => {
+    setTableSpec(initialTableDataSpec);
+    setRows(data);
+    const savedColumnSetup = localStorage.getItem(tableId);
+    if (savedColumnSetup) {
+      const savedColumnSetupObject = JSON.parse(savedColumnSetup);
+      setColumnSetupFromStringArray(savedColumnSetupObject);
+    }
+  }, []);
 
   return (
     <>
