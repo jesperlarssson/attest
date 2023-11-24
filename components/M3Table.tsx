@@ -30,67 +30,29 @@ type TableProps = {
 
 const M3Table: React.FC<TableProps> = ({ data, idAttribute = null }) => {
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
-  const { openViewer } = useContextViewer();
-
-  const initialTableDataSpec = mapToTableColumnSpecs(data[0].REPL);
   const [tableSpec, setTableSpec] = useState<TableColumnSpec[]>();
   const [rows, setRows] = useState<any[]>([]);
+
+  const initialTableDataSpec = mapToTableColumnSpecs(data[0].REPL);
 
   useEffect(() => {
     const columns = mapToTableColumnSpecs(data[0].REPL);
     const passedRows = transformData(data, idAttribute);
     setRows(passedRows);
     setTableSpec(columns);
-  }, []);
+  }, [data, idAttribute]);
 
-  const handleRowClick = (row: any) => {
-    console.log(row);
-    if (idAttribute) {
-      openViewer(
-        <ContextInvoice
-          invoiceId={row.id}
-          amount={row.EPCUAM}
-          currency={row.EPCUCD}
-          epdudt={row.EPDUDT}
-          epivdt={row.EPIVDT}
-          pdfUrl="/docs/invoice.pdf"
-        ></ContextInvoice>
-      );
-    }
-  };
-
-  const toggleColumnActive = (heading: string) => {
-    setTableSpec((currentSpec) => {
-      // Check if currentSpec is not null or undefined before mapping
-      if (!currentSpec) {
-        // Handle the case where currentSpec is null or undefined
-        // You could return an empty array or the initial state, for example
-        return initialTableDataSpec;
-      }
-
-      return currentSpec.map((column) =>
-        column.heading === heading
-          ? { ...column, active: !column.active }
-          : column
-      );
-    });
-
-    toast(`Updated visibility for ${heading}`);
-  };
 
   if (rows.length == 0 || !rows) {
     return (
       <div className="w-full h-full flex justify-center items-center font-semibold tracking-wide text-lg text-slate-400">
-        Nothing to attest...
+        No results...
       </div>
     );
   }
 
   return (
     <div className="overflow-x-auto">
-      {/* <div>
-        <button onClick={() => toggleColumnActive("EPDIVI")}>EDIT</button>
-      </div> */}
       <table className="min-w-full  border border-edge-light  dark:border-edge-dark">
         <thead>
           <tr>
@@ -111,7 +73,7 @@ const M3Table: React.FC<TableProps> = ({ data, idAttribute = null }) => {
           {rows.map((row, rowIndex) => (
             <React.Fragment key={`${row.id}-${rowIndex}` || rowIndex}>
               <tr
-                onClick={() => handleRowClick(row)}
+                onClick={() => {}}
                 className={`cursor-pointer transition-colors hover:bg-black hover:bg-opacity-10 ${
                   expandedRowId === row.id
                     ? "bg-black bg-opacity-20 hover:bg-slate-300"
