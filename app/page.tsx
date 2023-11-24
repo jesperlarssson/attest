@@ -23,8 +23,9 @@ interface Invoice {
 }
 
 const Home = () => {
-  const [invoices, setInvoices] = useState();
-  const [transactions, setTransactions] = useState();
+  const [invoices, setInvoices] = useState<any[] | null>(null);
+  const [transactions, setTransactions] = useState<any[] | null>(null);
+
   const { user } = useAuth();
 
   const fetchTransactions = async () => {
@@ -77,7 +78,7 @@ const Home = () => {
   //   );
   // };
 
-  if (!invoices || !transactions) {
+  if (invoices === null || transactions === null) {
     return (
       <ProtectedRoute>
         <div className="w-full h-full flex justify-center items-center">

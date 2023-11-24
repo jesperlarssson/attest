@@ -126,7 +126,7 @@ async function getCugexInstancesForUserId(
 ): Promise<any> {
   try {
     const list = await getInforM3MIv2Axios(
-      `/EXPORTMI/Select?SEPC=;&HDRS=1&QERY=F1PK01, F1PK02, F1PK03, F1PK04, F1A030, F1A130, F1A230, F1A330, F1A430, F1A530 from CUGEX1 where F1A130 = '${id}' and F1FILE = '${file}'`
+      `/EXPORTMI/Select?SEPC=;&HDRS=1&QERY=F1PK01, F1PK02, F1PK03, F1PK04, F1PK05, F1A030, F1A130, F1A230, F1A330, F1A430, F1A530 from CUGEX1 where F1A130 = '${id}' and F1FILE = '${file}'`
     );
     return list.results[0].records;
   } catch (error) {
@@ -188,7 +188,20 @@ async function updateInCugex(body: any) {
 }
 
 async function postToCugex(body: any) {
-  const { file, pk01, pk02, pk03, pk04, pk05, a030, a130, a230, a330, a430, a530 } = body;
+  const {
+    file,
+    pk01,
+    pk02,
+    pk03,
+    pk04,
+    pk05,
+    a030,
+    a130,
+    a230,
+    a330,
+    a430,
+    a530,
+  } = body;
 
   let queryParams = new URLSearchParams();
 
@@ -207,13 +220,36 @@ async function postToCugex(body: any) {
 
   queryParams.append("maxrecs", "0");
 
-  console.log(`/CUSEXTMI/AddFieldValue?${queryParams.toString()}`)
+  console.log(`/CUSEXTMI/AddFieldValue?${queryParams.toString()}`);
   try {
     const list = await getInforM3MIv2Axios(
       `/CUSEXTMI/AddFieldValue?${queryParams.toString()}`
     );
-    console.log(list)
+    console.log(list);
     return list.results[0].records[0];
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function deleteFromCugex(body: any) {
+  const { file, pk01, pk02, pk03, pk04, pk05 } = body;
+
+  let queryParams = new URLSearchParams();
+
+  if (file) queryParams.append("FILE", file);
+  if (pk01) queryParams.append("PK01", pk01);
+  if (pk02) queryParams.append("PK02", pk02);
+  if (pk03) queryParams.append("PK03", pk03);
+  if (pk04) queryParams.append("PK04", pk04);
+  if (pk05) queryParams.append("PK05", pk05);
+console.log(`/CUSEXTMI/DelFieldValue?${queryParams.toString()}`)
+  try {
+    const list = await getInforM3MIv2Axios(
+      `/CUSEXTMI/DelFieldValue?${queryParams.toString()}`
+    );
+    console.log(list);
+    return true;
   } catch (error) {
     throw error;
   }
@@ -253,5 +289,6 @@ export {
   getCugexInstancesForUserId,
   getSupplierInvoiceTotalInfo,
   postToCugex,
+  deleteFromCugex,
   updateInCugex,
 };

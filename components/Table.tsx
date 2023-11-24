@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { twMerge } from "tailwind-merge";
 
 type TableProps = {
+  tableId: string;
   data: Record<string, string>[];
   activeColumns: string[];
   onRowClick: (row: any) => void;
@@ -18,6 +19,7 @@ export type TableColumnSpec = {
 };
 
 const Table: React.FC<TableProps> = ({
+  tableId,
   data,
   onRowClick,
   activeColumns,
@@ -41,9 +43,27 @@ const Table: React.FC<TableProps> = ({
   const [tableSpec, setTableSpec] = useState<TableColumnSpec[]>();
   const [rows, setRows] = useState<any[]>(data);
 
+  const setColumnSetupFromStringArray = (list: string[]) => {
+    setTableSpec((currentSpec) => {
+      if (!currentSpec) {
+        return;
+      }
+
+      return currentSpec.map((column) => ({
+        ...column,
+        active: list.includes(column.M3Heading),
+      }));
+    });
+  };
+
   useEffect(() => {
     setTableSpec(initialTableDataSpec);
     setRows(data);
+    const savedColumnSetup = localStorage.getItem(tableId);
+    if (savedColumnSetup) {
+      const savedColumnSetupObject = JSON.parse(savedColumnSetup);
+      setColumnSetupFromStringArray(savedColumnSetupObject);
+    }
   }, []);
 
   const toggleColumnActive = (heading: string) => {
@@ -61,11 +81,25 @@ const Table: React.FC<TableProps> = ({
           : column
       );
     });
+    // Store only the active column headings in localStorage
+    const activeHeadings =
+      tableSpec &&
+      tableSpec
+        .filter((column) =>
+          column.M3Heading === heading ? !column.active : column.active
+        )
+        .map((column) => column.M3Heading);
 
+    localStorage.setItem(tableId, JSON.stringify(activeHeadings));
     toast(`Updated visibility for ${heading}`);
   };
 
   const [editModeOpen, setEditModeOpen] = useState<boolean>(false);
+
+  const handleUseDefault = () => {
+    setColumnSetupFromStringArray(activeColumns);
+    localStorage.setItem(tableId, JSON.stringify(activeColumns));
+  };
 
   return (
     <>
@@ -92,6 +126,12 @@ const Table: React.FC<TableProps> = ({
               </button>
             );
           })}
+          <button
+            onClick={handleUseDefault}
+            className="rounded-md px-2 py-1 text-xs hover:shadow-md bg-slate-300 hover:bg-slate-400"
+          >
+            Use default
+          </button>
         </div>
       )}
       <div className="overflow-x-auto rounded-lg shadow-lg">

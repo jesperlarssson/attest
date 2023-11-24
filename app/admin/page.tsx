@@ -61,10 +61,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      fetchTransactions();
-      checkForInvoices();
-    }
+    reload();
   }, [user]);
 
   // const handleInstanceApproved = (id: number) => {

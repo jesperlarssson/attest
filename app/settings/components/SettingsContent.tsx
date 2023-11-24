@@ -2,10 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useTableSettings } from "@/hooks/useTableSettings";
-import { getInforM3MIv2Axios } from "@/services/infor";
 import toast from "react-hot-toast";
 import axios from "axios";
-import ThemeButton from "@/components/ThemeButton";
 
 interface ApiUser {
   ZZUSID: string;
@@ -78,7 +76,7 @@ const SettingsContent = () => {
   }, []);
 
   return (
-    <div className="container mx-auto w-full mt-4">
+    <div className="container w-full mt-4">
       <div className="mb-10">
         <h3 className="text-lg leading-6 font-medium  mb-4">M3 Connection</h3>
         <div className="shadow overflow-hidden rounded-md">
@@ -108,35 +106,6 @@ const SettingsContent = () => {
           )}
         </div>
       </div>
-      <div>
-        <h3 className="text-lg leading-6 font-medium  mb-4">
-          Table Column Editor
-        </h3>
-        <div className="shadow overflow-hidden rounded-md">
-          <div className="px-4 py-5 bg-card-light dark:bg-card-dark border border-edge-light dark:border-edge-dark space-y-6 sm:p-6">
-            {tableSpec &&
-              tableSpec.map((column) => (
-                <div key={column.heading} className="flex items-center">
-                  <input
-                    id={`toggle_${column.heading}`}
-                    name={`toggle_${column.heading}`}
-                    type="checkbox"
-                    checked={column.active}
-                    onChange={() => toggleColumnActive(column.heading)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-edge-light dark:border-edge-dark rounded"
-                  />
-                  <label
-                    htmlFor={`toggle_${column.heading}`}
-                    className="ml-3 block text-sm font-medium opacity-80"
-                  >
-                    {column.heading}
-                  </label>
-                </div>
-              ))}
-          </div>
-        </div>
-      </div>
-     
     </div>
   );
 };

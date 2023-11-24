@@ -25,8 +25,6 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-
-
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
@@ -40,17 +38,15 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
       const savedUser = localStorage.getItem("user");
       if (savedUser) {
         setUser(JSON.parse(savedUser));
-        router.push("/");
-        // const user = JSON.parse(savedUser);
-        // login(user.employmentId, user.pincode);
+      } else {
+        router.push("/login");   
       }
+      
     };
 
     checkUserAuthentication();
   }, []);
   const login = async (employmentId: string, pincode: string) => {
-    // TODO: Replace with actual login logic with Infor M3 API
-
     try {
       const response = await fetch("/api/auth/m3/login", {
         method: "POST",
@@ -69,7 +65,6 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
 
       const userData = await response.json();
       setUser(userData);
-      console.log(userData);
       localStorage.setItem("user", JSON.stringify(userData));
       router.push("/");
       return userData;

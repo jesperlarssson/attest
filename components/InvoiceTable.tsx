@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useContextViewer } from "@/contexts/ViewerContext";
 import ContextInvoice from "./ContextInvoice";
 import Table from "./Table";
@@ -15,6 +14,9 @@ const InvoiceTable: React.FC<TableProps> = ({
   data,
   activeColumns = ["SUNO", "SINO", "OAMT", "LOCD"],
 }) => {
+
+  const tableId = 'aps200-invoice'
+
   const { openViewer } = useContextViewer();
 
   const handleRowClick = (row: any) => {
@@ -33,6 +35,7 @@ const InvoiceTable: React.FC<TableProps> = ({
 
   return (
     <Table
+      tableId={tableId}
       data={data}
       onRowClick={handleRowClick}
       activeColumns={activeColumns}
