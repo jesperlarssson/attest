@@ -34,14 +34,14 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     // TODO: Replace with actual user authentication logic with Infor M3 API
     const checkUserAuthentication = async () => {
-      // Logic to check if the user is authenticated
-      const savedUser = localStorage.getItem("user");
-      if (savedUser) {
-        setUser(JSON.parse(savedUser));
-      } else {
-        router.push("/login");   
+      if (typeof window !== "undefined") {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+          setUser(JSON.parse(savedUser));
+        } else {
+          router.push("/login");
+        }
       }
-      
     };
 
     checkUserAuthentication();
@@ -65,7 +65,9 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
 
       const userData = await response.json();
       setUser(userData);
-      localStorage.setItem("user", JSON.stringify(userData));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("user", JSON.stringify(userData));
+      }
       router.push("/");
       return userData;
     } catch (error) {
@@ -77,9 +79,9 @@ export const AuthProvider: NextPage<AuthProviderProps> = ({ children }) => {
     // Clear user from state
     setUser(null);
 
-    // Remove from local storage
-    localStorage.removeItem("user");
-
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("user");
+    }
     // Redirect to the login page
     router.push("/login");
   };

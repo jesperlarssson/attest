@@ -77,23 +77,28 @@ const Table: React.FC<TableProps> = ({
           column.M3Heading === heading ? !column.active : column.active
         )
         .map((column) => column.M3Heading);
-
-    localStorage.setItem(tableId, JSON.stringify(activeHeadings));
+    if (typeof window !== "undefined") {
+      localStorage.setItem(tableId, JSON.stringify(activeHeadings));
+    }
     toast(`Updated visibility for ${heading}`);
   };
 
   const handleUseDefault = () => {
     setColumnSetupFromStringArray(activeColumns);
-    localStorage.setItem(tableId, JSON.stringify(activeColumns));
+    if (typeof window !== "undefined") {
+      localStorage.setItem(tableId, JSON.stringify(activeColumns));
+    }
   };
 
   useEffect(() => {
     setTableSpec(initialTableDataSpec);
     setRows(data);
-    const savedColumnSetup = localStorage.getItem(tableId);
-    if (savedColumnSetup) {
-      const savedColumnSetupObject = JSON.parse(savedColumnSetup);
-      setColumnSetupFromStringArray(savedColumnSetupObject);
+    if (typeof window !== "undefined") {
+      const savedColumnSetup = localStorage.getItem(tableId);
+      if (savedColumnSetup) {
+        const savedColumnSetupObject = JSON.parse(savedColumnSetup);
+        setColumnSetupFromStringArray(savedColumnSetupObject);
+      }
     }
   }, [data, initialTableDataSpec, tableId]);
 

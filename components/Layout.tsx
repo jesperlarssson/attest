@@ -15,8 +15,10 @@ type LayoutProps = {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {
-    const saved = localStorage.getItem("sidebarOpen");
-    return saved ? JSON.parse(saved).value : true;
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("sidebarOpen");
+      return saved ? JSON.parse(saved).value : true;
+    }
   });
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -24,18 +26,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [domLoaded, setDomLoaded] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(
-      "sidebarOpen",
-      JSON.stringify({ value: isSidebarOpen })
-    );
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "sidebarOpen",
+        JSON.stringify({ value: isSidebarOpen })
+      );
+    }
   }, [isSidebarOpen]);
 
   useEffect(() => {
-    const sidebarOpen = localStorage.getItem("sidebarOpen");
-    if (sidebarOpen) {
-      setIsSidebarOpen(JSON.parse(sidebarOpen).value);
-    } else {
-      setIsSidebarOpen(true);
+    if (typeof window !== "undefined") {
+      const sidebarOpen = localStorage.getItem("sidebarOpen");
+      if (sidebarOpen) {
+        setIsSidebarOpen(JSON.parse(sidebarOpen).value);
+      } else {
+        setIsSidebarOpen(true);
+      }
     }
     setDomLoaded(true);
   }, []);
