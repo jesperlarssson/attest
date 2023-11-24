@@ -25,10 +25,6 @@ const Table: React.FC<TableProps> = ({
   activeColumns,
   children,
 }) => {
-  if (data.length == 0 || !data) {
-    return children;
-  }
-
   const createTableColumnSpecs = (
     data: Record<string, string>
   ): TableColumnSpec[] => {
@@ -99,7 +95,11 @@ const Table: React.FC<TableProps> = ({
       const savedColumnSetupObject = JSON.parse(savedColumnSetup);
       setColumnSetupFromStringArray(savedColumnSetupObject);
     }
-  }, []);
+  }, [data, initialTableDataSpec, tableId]);
+
+  if (data.length == 0 || !data) {
+    return children;
+  }
 
   return (
     <>
