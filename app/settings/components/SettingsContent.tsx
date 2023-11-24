@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useTableSettings } from "@/hooks/useTableSettings";
 import toast from "react-hot-toast";
 import axios from "axios";
 
@@ -33,7 +32,6 @@ const formatDateAndTime = (date: string, time: string) => {
 };
 
 const SettingsContent = () => {
-  const { tableSpec, toggleColumnActive } = useTableSettings();
   const [connectionLoading, setConnectionLoading] = useState<boolean>(false);
   const [serverTime, setServerTime] = useState<string>();
   const [apiUser, setApiUser] = useState<ApiUser | null>();
